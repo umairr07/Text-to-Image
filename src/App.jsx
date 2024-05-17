@@ -28,6 +28,7 @@ function App() {
 
   const showImage = () => {
     fetchData();
+    setSearchImage("");
   };
 
   return (
