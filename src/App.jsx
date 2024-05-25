@@ -1,34 +1,33 @@
 import { useState } from "react";
 
 function App() {
-  const [searchImage, setSearchImage] = useState("");
-  const [generatedImage, setGeneratedImage] = useState("");
-  const API_TOKEN = "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";
-
-  async function fetchData() {
-    try {
-      const response = await fetch(
-        "https://api-inference.huggingface.co/models/prompthero/openjourney-v4",
-        {
-          headers: { Authorization: `Bearer ${API_TOKEN}` },
-          method: "POST",
-          body: JSON.stringify({ inputs: searchImage }),
-        }
-      );
-
-      const blobData = await response.blob();
-      console.log(blobData);
-
-      const imgSrc = URL.createObjectURL(blobData);
-      setGeneratedImage(imgSrc);
-    } catch (error) {
-      console.log(error);
-    }
+  const [serachval, setSearchval] = useState("");
+  const [generatedimg, setGeneratedimg] = useState("");
+  // const API_KEY = "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";
+  async function query(data) {
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/prompthero/openjourney-v4",
+      {
+        headers: {
+          Authorization: "Bearer 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",
+        },
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    );
+    const result = await response.blob();
+    return result;
   }
+  // query({ "inputs": "Astronaut riding a horse" }).then((response) => {
+  //   // Use image
+  // });
 
-  const showImage = () => {
-    fetchData();
-    setSearchImage("");
+  const generateimage = async () => {
+    await query({ inputs: serachval }).then((response) => {
+      const imgsrc = URL.createObjectURL(response);
+      setGeneratedimg(imgsrc);
+      console.log(response);
+    });
   };
 
   return (
@@ -39,18 +38,18 @@ function App() {
           type="text"
           placeholder="Enter a text"
           className="border-2 p-2 w-[50%] mt-5"
-          value={searchImage}
-          onChange={(e) => setSearchImage(e.target.value)}
+          value={serachval}
+          onChange={(e) => setSearchval(e.target.value)}
         />
         <button
           className="mt-5 bg-[#000] text-[#fff] p-2 rounded-lg w-[15%]"
-          onClick={showImage}
+          onClick={generateimage}
         >
           Generate
         </button>
       </div>
-      <div className="mt-10 h-[400px] w-[500px] border-2 m-auto p-5">
-        {generatedImage && <img src={generatedImage} alt="Image" />}
+      <div className="mt-10 h-[400px] w-[500px]  m-auto p-5">
+        {generatedimg && <img src={generatedimg} alt="Image" />}
       </div>
     </div>
   );
