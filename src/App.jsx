@@ -1,9 +1,9 @@
 import { useState } from "react";
-const API_TOKEN = "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";
 
 function App() {
   const [searchImage, setSearchImage] = useState("");
   const [generatedImage, setGeneratedImage] = useState("");
+  const API_TOKEN = "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";
 
   async function fetchData() {
     try {
